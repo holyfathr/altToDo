@@ -2,6 +2,7 @@ import Login from './pages/Login/Login.jsx'
 import SignIn from './pages/SignIn/SignIn.jsx'
 import {useState} from "react";
 import './App.scss';
+import ToDoList from './pages/ToDoList.jsx';
 
 
 function App() {
@@ -38,9 +39,9 @@ function App() {
             </li>
           </ul>
       </header>
-      {showtab1 && <Login/>}
-      {showtab2 && <SignIn/>}
-
+      {/* {showtab1 && <Login/>}
+      {showtab2 && <SignIn/>} */}
+        <ToDoList/>
     </div>
   );
 }
