@@ -1,36 +1,72 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./ToDoCard.scss";
+import CheckIcon from '@mui/icons-material/Check';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ToDoCard = () =>{
 
-    const [newTodo, setNewTodo] = useState(false)
-    const [toDoInfo, setToDoList] = useState()
-
-    React.useEffect(()=>{
-        fetch('https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList').then((res)=>{
-            return res.json();
-        })
-        .then((json)=>{
-            setToDoList(json)
-        })
-    })
-
-    const addToDo = async (todo) => {
-        try{
-            const res = await axios.post('https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList', todo)
-            console.log('todo ADDED', res.data)
-        } catch (error) {
-            console.log('error')
+    const [tasks, setTasks] = useState([]);
+    const [newTask, setNewTask] = useState('');
+  
+    // Загрузка существующих задач при монтировании компонента
+    useEffect(() => {
+        axios.get('https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList')
+          .then(response => {
+            setTasks(response.data); // Сохраняем весь массив объектов задач
+          })
+          .catch(error => console.error('Error fetching tasks:', error));
+      }, []);
+      
+  
+    const handleAddTask = () => {
+        if (newTask.trim() !== '') {
+          axios.post('https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList', { title: newTask })
+            .then(response => {
+              setTasks([...tasks, response.data]); // Теперь сохраняем весь объект задачи
+              setNewTask(''); // Очистка поля ввода
+            })
+            .catch(error => console.error('Error adding task:', error));
         }
-    }
+      };
+      
 
-    return(
-        <div>
-            <button onClick={setNewTodo(true)}>
-                add
-            </button>
+    const handleDeleteTask = (id) => {
+        axios.delete(`https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList/${id}`)
+          .then(() => {
+            setTasks(tasks.filter(task => task.id !== id));
+          })
+          .catch(error => console.error('Error deleting task:', error));
+      };
+          
+  
+    return (
+      <div className="todo-app">
+        <div className="header">
+          <input
+            type="text"
+            value={newTask}
+            onChange={e => setNewTask(e.target.value)}
+            placeholder="Новая таска"
+          />
+          <button className="add-btn" onClick={handleAddTask}>+</button>
         </div>
-    )
-}
-
+        <h4 className="todo-list-title">Текущие задачи</h4>
+        <div className="todo-list">
+            {tasks.map((task) => (
+                <div key={task.id} className="todo-card">
+                    <div className="todo-card-text">{task.title}</div>
+                    <div className="todo-card-buttons">
+                        <button><CheckIcon/></button>
+                        <button onClick={() => handleDeleteTask(task.id)}><DeleteIcon/></button>
+                    </div>
+                </div>
+            ))}
+        </div>
+        <h4 className="todo-list-title">Выполненые задачи</h4>
+        <div className="todo-list">
+        </div>
+      </div>
+    );
+  }
 export default ToDoCard

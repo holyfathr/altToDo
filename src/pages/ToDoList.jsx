@@ -1,11 +1,16 @@
 import React from "react";
 import ToDoCard from "../components/ToDoCard/ToDoCard";
+import Header from "../components/Header/Header";
+import "./ToDoList.scss"
 
 const ToDoList = () => {
     return(
-       <div>
-            <ToDoCard/>
-       </div>
+       <>
+            <Header/>
+            <div className="body">
+                <ToDoCard/>
+            </div>
+       </>
     )
 }
 
