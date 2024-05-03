@@ -1,0 +1,42 @@
+body{
+    background: #0D0714;
+}
+
+.login{
+    display: grid;
+    justify-content: center;
+    margin-top: 200px;
+
+    form{
+        display: flex;
+        flex-direction: column;
+        h1{
+            display: flex;
+            justify-content: center;
+            color: #9E78CF;
+            font-size: 50px;
+        }
+    
+        input{
+            width: 350px;
+            height: 40px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            border: 1px solid #9E78CF;
+            box-sizing: border-box;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-size: 20px;
+        }
+    }
+    button{
+        margin: 0 auto;
+        width: 170px;
+        height: 40px;
+        border-radius: 13px;
+        background-color: #9E78CF;
+        color:#ffffff;
+        font-size: 20px;
+    }
+}
+
