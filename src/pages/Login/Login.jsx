@@ -18,9 +18,13 @@ const Login = () => {
           password
         }
       });
-      if (response.status === 200) {
+      if (response.data.length > 0) {
         setError(null);
+        const user = response.data[0];
+        localStorage.setItem('user', JSON.stringify(user));
         navigate('/dashboard');
+      } else {
+        setError('Login failed. Please try again.');
       }
     } catch (err) {
       setError('Login failed. Please try again.');

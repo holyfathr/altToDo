@@ -20,19 +20,19 @@ function FirstPage() {
 
   return (
     <div>
-      <header class = "enterheader">
-          <div class = "name">
+      <header className = "enterheader">
+          <div className = "name">
             <p>ToDo</p>
             <BookIcon className='logo'/>
           </div>
 
           <ul role = "tablist">
-            <li class = "nav-item">
+            <li className = "nav-item">
               <button onClick = {handletab1}>
                 Вход
               </button>
             </li>
-            <li class = "nav-item">
+            <li className = "nav-item">
               <button className='signIn' onClick = {handletab2}>
                 Регистрация
               </button>

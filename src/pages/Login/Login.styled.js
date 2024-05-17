@@ -15,7 +15,7 @@ export const StyledContainer = styled(Container)({
   export const StyledTitle = styled(Typography)({
     display: 'flex',
     justifyContent: 'center',
-    color: '#9E78CF',
+    color: '#4482fc',
     fontSize: '50px',
   });
   
@@ -25,7 +25,7 @@ export const StyledContainer = styled(Container)({
     marginBottom: '30px',
     borderRadius: '10px',
     backgroundColor: 'rgba(0, 0, 0, 0)',
-    border: '1px solid #9E78CF',
+    border: '1px solid #4482fc',
     boxSizing: 'border-box',
     paddingLeft: '10px',
     paddingRight: '10px',
@@ -37,7 +37,7 @@ export const StyledContainer = styled(Container)({
     width: '170px',
     height: '40px',
     borderRadius: '13px',
-    backgroundColor: '#9E78CF',
+    backgroundColor: '#4482fc',
     color: '#ffffff',
     fontSize: '20px',
   });

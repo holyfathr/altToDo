@@ -1,9 +1,12 @@
+body{
+  background-color: #f3f7ffbb;  
+}
 
 .enterheader{
   display: flex;
   justify-content: space-between;
   height: 80px;
-  border-bottom: 1px solid #ffffff;
+  border-bottom: 1px solid #000000;
   .name{
     display: flex;
     p{
@@ -33,7 +36,7 @@
         margin-right: 20px;
         border-radius: 13px;
         border: 0;
-        background-color: #9E78CF;
+        background-color: #ffffff;
         color:#ffffff;
         font-size: 17px;
         font-weight:bold;

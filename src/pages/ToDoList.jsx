@@ -5,12 +5,12 @@ import "./ToDoList.scss"
 
 const ToDoList = () => {
     return(
-       <>
+       <div className="app">
             <Header/>
             <div className="body">
                 <ToDoCard/>
             </div>
-       </>
+       </div>
     )
 }
 

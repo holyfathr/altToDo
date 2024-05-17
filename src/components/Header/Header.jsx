@@ -13,11 +13,6 @@ const Header = () =>{
 
           <ul role = "tablist">
             <li class = "nav-item">
-              <button>
-                Профиль
-              </button>
-            </li>
-            <li class = "nav-item">
               <NavLink to="/login">
                 <button>
                     Выход

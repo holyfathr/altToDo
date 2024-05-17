@@ -1,5 +1,5 @@
 .todo-app {
-    color: white;
+    background-color: #f3f7ffbb;  
     max-width: 400px;
     margin: 20px auto;
     padding: 20px;
@@ -17,16 +17,16 @@
     width: 381px;
     flex: 1;
     padding: 10px;
-    color: #9E78CF;
-    border: 1px solid #3E1671;
+    color: #4482fc;
+    border: 1px solid #053696;
     border-radius: 4px;
-    background-color: #3d167100;
+    background-color: #1f167100;
   }
 
   .header .add-btn {
     width: 40px;
     height: 40px;
-    background-color: #9E78CF;
+    background-color: #4482fc;
     color: white;
     border: none;
     padding: 0 15px;
@@ -48,7 +48,7 @@
 
   .todo-card{
     width: 432px;
-    background-color:#15101C ;
+    background-color:#ff0000 ;
     border-radius: 10px;
     display: flex;
     flex-direction: row;
@@ -59,7 +59,7 @@
 
   .todo-card-text{
     width: 322px;
-    color: #9E78CF;
+    color: #4482fc;
     font-size: 18px;
     font-weight: 400;
     line-height: 19.36px;
@@ -76,11 +76,11 @@
   .todo-card-buttons button{
     background-color: rgba(0, 0, 0, 0);
     border: none;
-    color: #9E78CF;
+    color: #4482fc;
   }
 
   .todo-card-buttons button:hover{
-    color: #3E1671;
+    color: #053696;
     cursor: pointer;
   }
 
@@ -95,10 +95,23 @@
   .editBtn{
     cursor: pointer;
     border-radius: 20px;
-    border: 1px solid #9E78CF;
-    color: #9E78CF;
+    border: 1px solid #4482fc;
+    color: #4482fc;
     background-color: #15101C;
     margin-top: -15px;
   }
   
-  
+  .todo-list-complete{
+    display: flex;
+    flex-direction: column;
+    column-gap: normal;
+
+    .todo-card-title{
+      text-decoration: line-through;
+      color: #4482fc81;
+    }
+    
+    .todo-card-description{
+      color: #4482fc81;
+    }
+  }
