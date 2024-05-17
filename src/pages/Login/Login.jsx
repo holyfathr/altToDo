@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "@mui/material";
 import axios from "axios";
-import { StyledContainer, StyledForm, StyledTitle, StyledTextField, StyledButton } from './Login.styled';
+import "./Login.scss";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +10,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      setError('Пожалуйста введите данные');
+      return;
+    }
     try {
       const response = await axios.get('https://6635d4e5415f4e1a5e256e75.mockapi.io/users', {
         params: {
@@ -24,48 +27,42 @@ const Login = () => {
         localStorage.setItem('user', JSON.stringify(user));
         navigate('/dashboard');
       } else {
-        setError('Login failed. Please try again.');
+        setError('Ошибка входа.');
       }
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError('Проверьте правильность логина или пароля.');
     }
   };
 
   return (
-    <StyledContainer maxWidth="sm">
-      <StyledForm>
-        <StyledTitle component="h1">
-          Login
-        </StyledTitle>
-        <StyledTextField
-          required
+    <div className="login">
+      <form>
+        <h1>Вход</h1>
+        <input
+          type="email"
           id="email"
-          label="Email Address"
           name="email"
-          autoComplete="email"
-          autoFocus
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-        />
-        <StyledTextField
           required
-          name="password"
-          label="Password"
+          autoFocus
+        />
+        <input
           type="password"
           id="password"
-          autoComplete="current-password"
+          name="password"
+          placeholder="Пароль"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        {error && <Alert severity="error">{error}</Alert>}
-        <StyledButton
-          variant="contained"
-          onClick={handleLogin}
-        >
-          Login
-        </StyledButton>
-      </StyledForm>
-    </StyledContainer>
+        {error && <div className="login-error">{error}</div>}
+        <button type="button" onClick={handleLogin}>
+          Войти
+        </button>
+      </form>
+    </div>
   );
 };
 
