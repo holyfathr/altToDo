@@ -83,5 +83,22 @@
     color: #3E1671;
     cursor: pointer;
   }
+
+  .todo-card-title{
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .todo-card-description{
+    font-size: 15px;
+  }
+  .editBtn{
+    cursor: pointer;
+    border-radius: 20px;
+    border: 1px solid #9E78CF;
+    color: #9E78CF;
+    background-color: #15101C;
+    margin-top: -15px;
+  }
   
   
