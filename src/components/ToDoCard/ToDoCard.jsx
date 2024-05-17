@@ -9,6 +9,7 @@ const ToDoCard = () => {
   const [completedTasks, setCompletedTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [newDescription, setNewDescription] = useState("");
+  const [newDueDate, setNewDueDate] = useState("");
   const [editTaskDescription, setEditTaskDescription] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
   const user = JSON.parse(localStorage.getItem('user'));
@@ -32,11 +33,12 @@ const ToDoCard = () => {
   }, [user]);
 
   const handleAddTask = () => {
-    if (newTask.trim() !== "") {
+    if (newTask.trim() !== "" && newDueDate.trim() !== "") {
       axios
         .post("https://6635d4e5415f4e1a5e256e75.mockapi.io/ToDoList", {
           title: newTask,
           description: newDescription,
+          dueDate: newDueDate,
           completed: false,
           userId: user.id
         })
@@ -44,6 +46,7 @@ const ToDoCard = () => {
           setTasks([...tasks, response.data]);
           setNewTask("");
           setNewDescription("");
+          setNewDueDate("");
         })
         .catch((error) => console.error("Error adding task:", error));
     }
@@ -114,6 +117,11 @@ const ToDoCard = () => {
           onChange={(e) => setNewDescription(e.target.value)}
           placeholder="Описание"
         />
+        <input
+          type="date"
+          value={newDueDate}
+          onChange={(e) => setNewDueDate(e.target.value)}
+        />
         <button className="add-btn" onClick={handleAddTask}>
           +
         </button>
@@ -136,13 +144,14 @@ const ToDoCard = () => {
                   </button>
                 </div>
               ) : (
-                <div className="todo-card-buttons">
+                <div>
                   <div className="todo-card-description">{task.description}</div>
+                  <div className="todo-card-dueDate">Срок выполнения: {task.dueDate}</div>
                   <button
-                    className="edit-btn"
+                    className="editBtn"
                     onClick={() => handleEditTaskDescription(task.id, task.description)}
                   >
-                    Edit Description
+                    Изменить
                   </button>
                 </div>
               )}
@@ -165,6 +174,7 @@ const ToDoCard = () => {
             <div className="todo-card-text">
               <div className="todo-card-title">{task.title}</div>
               <div className="todo-card-description">{task.description}</div>
+              <div className="todo-card-dueDate">Срок выполнения: {task.dueDate}</div>
             </div>
             <div className="todo-card-buttons">
               <button onClick={() => handleDeleteCompletedTask(task.id)}>
