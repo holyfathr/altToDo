@@ -12,7 +12,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.get('https://66478ad02bb946cf2f9e1ac8.mockapi.io/Users', {
+      const response = await axios.get('https://6635d4e5415f4e1a5e256e75.mockapi.io/users', {
         params: {
           email,
           password

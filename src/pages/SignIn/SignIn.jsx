@@ -12,18 +12,19 @@ const Register = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('https://66478ad02bb946cf2f9e1ac8.mockapi.io/Users', {
+      const response = await axios.post('https://6635d4e5415f4e1a5e256e75.mockapi.io/users', {
         email,
         password
       });
-      if (response.status === 200) {
+      if (response.status === 201) {
         setError(null);
-        
+        const user = response.data;
+        localStorage.setItem('user', JSON.stringify(user));
+        navigate('/dashboard');
       }
     } catch (err) {
       setError('Registration failed. Please try again.');
     }
-    navigate('/dashboard');
   };
 
   return (

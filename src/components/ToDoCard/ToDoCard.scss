@@ -7,14 +7,16 @@
   }
   
   .header {
-    width: 432px;
+    width: 500px;
     height: 40px;
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     margin-bottom: 20px;
   }
   
   .header input {
-    width: 381px;
+    width: 200px;
     flex: 1;
     padding: 10px;
     color: #4482fc;
@@ -36,8 +38,9 @@
   }
   .todo-list-title{
     margin-top: 70px;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 19px;
+    color:#4482fc;
   }
 
   .todo-list{
@@ -48,7 +51,8 @@
 
   .todo-card{
     width: 432px;
-    background-color:#ff0000 ;
+    background-color:#4481fc6b ;
+    border: 1px solid #4482fc;
     border-radius: 10px;
     display: flex;
     flex-direction: row;
@@ -97,7 +101,6 @@
     border-radius: 20px;
     border: 1px solid #4482fc;
     color: #4482fc;
-    background-color: #15101C;
     margin-top: -15px;
   }
   
