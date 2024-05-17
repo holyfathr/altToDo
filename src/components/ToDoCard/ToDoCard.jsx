@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./ToDoCard.scss";
-import CheckIcon from "@mui/icons-material/Check";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CheckIcon from '@mui/icons-material/Check';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ToDoCard = () => {
   const [tasks, setTasks] = useState([]);
@@ -11,34 +11,22 @@ const ToDoCard = () => {
   const [newDescription, setNewDescription] = useState("");
   const [editTaskDescription, setEditTaskDescription] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
-  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    if (user) {
-      axios
-        .get(`https://66478ad02bb946cf2f9e1ac8.mockapi.io/ToDoList`, {
-          params: {
-            userId: user.id
-          }
-        })
-        .then((response) => {
-          const tasks = response.data.filter(task => !task.completed);
-          const completed = response.data.filter(task => task.completed);
-          setTasks(tasks);
-          setCompletedTasks(completed);
-        })
-        .catch((error) => console.error("Error fetching tasks:", error));
-    }
-  }, [user]);
+    axios
+      .get("https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList")
+      .then((response) => {
+        setTasks(response.data);
+      })
+      .catch((error) => console.error("Error fetching tasks:", error));
+  }, []);
 
   const handleAddTask = () => {
     if (newTask.trim() !== "") {
       axios
-        .post("https://66478ad02bb946cf2f9e1ac8.mockapi.io/ToDoList", {
+        .post("https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList", {
           title: newTask,
           description: newDescription,
-          completed: false,
-          userId: user.id
         })
         .then((response) => {
           setTasks([...tasks, response.data]);
@@ -51,16 +39,8 @@ const ToDoCard = () => {
 
   const handleCompleteTask = (id) => {
     const completedTask = tasks.find((task) => task.id === id);
-    axios
-      .put(`https://66478ad02bb946cf2f9e1ac8.mockapi.io/ToDoList/${id}`, {
-        ...completedTask,
-        completed: true
-      })
-      .then(() => {
-        setCompletedTasks([...completedTasks, { ...completedTask, completed: true }]);
-        setTasks(tasks.filter((task) => task.id !== id));
-      })
-      .catch((error) => console.error("Error completing task:", error));
+    setCompletedTasks([...completedTasks, completedTask]);
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   const handleEditTaskDescription = (id, description) => {
@@ -72,18 +52,23 @@ const ToDoCard = () => {
     const editedTask = tasks.find((task) => task.id === id);
     editedTask.description = editTaskDescription;
     axios
-      .put(`https://66478ad02bb946cf2f9e1ac8.mockapi.io/ToDoList/${id}`, editedTask)
+      .put(
+        `https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList/${id}`,
+        editedTask
+      )
       .then(() => {
         setTasks(tasks.map((task) => (task.id === id ? editedTask : task)));
         setEditingTaskId(null);
         setEditTaskDescription("");
       })
-      .catch((error) => console.error("Error editing task description:", error));
+      .catch((error) =>
+        console.error("Error editing task description:", error)
+      );
   };
 
   const handleDeleteTask = (id) => {
     axios
-      .delete(`https://66478ad02bb946cf2f9e1ac8.mockapi.io/ToDoList/${id}`)
+      .delete(`https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList/${id}`)
       .then(() => {
         setTasks(tasks.filter((task) => task.id !== id));
       })
@@ -91,12 +76,7 @@ const ToDoCard = () => {
   };
 
   const handleDeleteCompletedTask = (id) => {
-    axios
-      .delete(`https://66478ad02bb946cf2f9e1ac8.mockapi.io/ToDoList/${id}`)
-      .then(() => {
-        setCompletedTasks(completedTasks.filter((task) => task.id !== id));
-      })
-      .catch((error) => console.error("Error deleting completed task:", error));
+    setCompletedTasks(completedTasks.filter((task) => task.id !== id));
   };
 
   return (
@@ -106,7 +86,7 @@ const ToDoCard = () => {
           type="text"
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Новая задача"
+          placeholder="Новая таска"
         />
         <input
           type="text"
@@ -136,13 +116,16 @@ const ToDoCard = () => {
                   </button>
                 </div>
               ) : (
-                <div className="todo-card-buttons">
-                  <div className="todo-card-description">{task.description}</div>
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEditTaskDescription(task.id, task.description)}
+                <div className="todo-card-buttonsн">
+                  <div className="todo-card-description">
+                    {task.description}
+                  </div>
+                  <button className="editBtn"
+                    onClick={() =>
+                      handleEditTaskDescription(task.id, task.description)
+                    }
                   >
-                    Изменить
+                    Edit Description
                   </button>
                 </div>
               )}
@@ -177,5 +160,4 @@ const ToDoCard = () => {
     </div>
   );
 };
-
 export default ToDoCard;
