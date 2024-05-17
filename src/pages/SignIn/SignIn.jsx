@@ -9,12 +9,12 @@ const SignIn = () =>{
     return(
         <div className = "signin">
            <form>
-                <h1>Sign In</h1>
-                <input  value = {email}  name = "email" type = "text" placeholder = "Enter your email..."></input>
-                <input value = {password} name = "password" type = "text" placeholder = "Enter your password..."></input>
-                <input value = {nickname} name = "nickname" type = "text" placeholder = "Enter your nickname..."></input>
+                <h1>Регистрация</h1>
+                <input  value = {email}  name = "email" type = "text" placeholder = "Введите почту"></input>
+                <input value = {password} name = "password" type = "text" placeholder = "Придумайте пароль"></input>
+                <input value = {nickname} name = "nickname" type = "text" placeholder = "Придумайте ник"></input>
            </form>
-           <button type = "signinButton">Sign In</button>
+           <button type = "signinButton">Регистрация</button>
         </div>
     )
 }

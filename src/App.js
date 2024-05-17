@@ -1,48 +1,24 @@
-import Login from './pages/Login/Login.jsx'
-import SignIn from './pages/SignIn/SignIn.jsx'
-import {useState} from "react";
-import './App.scss';
+import React, { Component, Suspense } from 'react'
+import { HashRouter, Route, Routes } from 'react-router-dom'
+import { Navigate } from 'react-router-dom';
 
+const Dashboard = React.lazy(() => import('./pages/ToDoList'))
+const Login = React.lazy(() => import('./pages/FirstPage'))
 
-function App() {
-  const [showtab1, setShowtab1] = useState(true);
-  const [showtab2, setShowtab2] = useState(false);
-
-  const handletab1 = () =>{
-    setShowtab1(true)
-    setShowtab2(false)
+class App extends Component {
+  render() {
+    return (
+      <HashRouter>
+        <Suspense>
+            <Routes>
+                <Route path="/" element={<Navigate to="/login" replace />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+            </Routes>
+        </Suspense>
+      </HashRouter>
+    )
   }
-
-  const handletab2 = () =>{
-    setShowtab1(false)
-    setShowtab2(true)
-  }
-
-  return (
-    <div>
-      <header class = "enterheader">
-          <div class = "name">
-            <img class = "logo" src='/img/logo.png' alt=""/>
-            <p>AltToDo</p>
-          </div>
-          <ul role = "tablist">
-            <li class = "nav-item">
-              <button onClick = {handletab1}>
-                Log In
-              </button>
-            </li>
-            <li class = "nav-item">
-              <button onClick = {handletab2}>
-                Sign In
-              </button>
-            </li>
-          </ul>
-      </header>
-      {showtab1 && <Login/>}
-      {showtab2 && <SignIn/>}
-
-    </div>
-  );
 }
 
-export default App;
+export default App

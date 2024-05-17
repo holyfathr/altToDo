@@ -9,11 +9,11 @@ const Login = () =>{
     return(
         <div className = "login">
            <form>
-                <h1>Log In</h1>
-                <input  value = {email}  name = "email" type = "text" placeholder = "Enter your email..."></input>
-                <input value = {password} name = "password" type = "text" placeholder = "Enter your password..."></input>
+                <h1>Вход</h1>
+                <input  value = {email}  name = "email" type = "text" placeholder = "Введите почту"></input>
+                <input value = {password} name = "password" type = "text" placeholder = "Введите пароль"></input>
            </form>
-           <button type = "loginButton">Log In</button>
+           <button type = "loginButton">Вход</button>
         </div>
     )
 }
