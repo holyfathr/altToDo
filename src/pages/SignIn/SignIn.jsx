@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "@mui/material";
 import axios from "axios";
-import { StyledContainer, StyledForm, StyledTitle, StyledTextField, StyledButton } from '../Login/Login.styled';
+import "./SignIn.scss";
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +9,20 @@ const Register = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const isEmailValid = (email) => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(email);
+  };
+
   const handleRegister = async () => {
+    if (!email || !password) {
+      setError('Пожалуйста введите данные');
+      return;
+    }
+    if (!isEmailValid(email)) {
+      setError('Пожалуйста введите действительный email');
+      return;
+    }
     try {
       const response = await axios.post('https://6635d4e5415f4e1a5e256e75.mockapi.io/users', {
         email,
@@ -28,40 +40,34 @@ const Register = () => {
   };
 
   return (
-    <StyledContainer maxWidth="sm">
-      <StyledForm>
-        <StyledTitle component="h1">
-          Register
-        </StyledTitle>
-        <StyledTextField
-          required
+    <div className="register">
+      <form>
+        <h1>Регистрация</h1>
+        <input
+          type="email"
           id="email"
-          label="Email Address"
           name="email"
-          autoComplete="email"
-          autoFocus
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-        />
-        <StyledTextField
           required
-          name="password"
-          label="Password"
+          autoFocus
+        />
+        <input
           type="password"
           id="password"
-          autoComplete="current-password"
+          name="password"
+          placeholder="Пароль"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        {error && <Alert severity="error">{error}</Alert>}
-        <StyledButton
-          variant="contained"
-          onClick={handleRegister}
-        >
-          Register
-        </StyledButton>
-      </StyledForm>
-    </StyledContainer>
+        {error && <div className="register-error">{error}</div>}
+        <button type="button" onClick={handleRegister}>
+          Регистрация
+        </button>
+      </form>
+    </div>
   );
 };
 

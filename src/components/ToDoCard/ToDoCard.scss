@@ -3,36 +3,43 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-
-  .header {
+  .headerWrapper{
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-
-    input[type="text"],
-    input[type="date"] {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #053696;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-
-    .add-btn {
-      padding: 10px 20px;
-      background-color: #4482fc;
-      border: none;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: #1d67fa;
+    justify-content: center;
+    .header {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+  
+      input[type="text"],
+      input[type="date"] {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #053696;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      .search{
+        margin-left: 10px;
+      }
+  
+      .add-btn {
+        padding: 10px 20px;
+        background-color: #4482fc;
+        border: none;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+  
+        &:hover {
+          background-color: #1d67fa;
+        }
       }
     }
   }
+  
 
   .todo-list-title {
     font-size: 24px;
@@ -65,7 +72,7 @@
         border-radius: 20px;
         border: 1px solid #4482fc;
         color: #4482fc;
-        margin-top: -15px;
+        margin-top: 5px;
       }    
 
       .todo-card-text {
@@ -83,6 +90,19 @@
         .todo-card-description {
           font-size: 16px;
           color: #4482fc;
+          
+        }
+        .todo-card-tags {
+          margin-top: 10px;
+
+          .todo-tag {
+            background-color: #4482fc;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-right: 5px;
+            display: inline-block;
+          }
         }
 
         .todo-card-dueDate {
