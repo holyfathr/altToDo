@@ -11,6 +11,7 @@ const ToDoCard = () => {
   const [newDescription, setNewDescription] = useState("");
   const [editTaskDescription, setEditTaskDescription] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
+  const [taskDate, setTaskDate] = useState('');
 
   useEffect(() => {
     axios
@@ -27,11 +28,13 @@ const ToDoCard = () => {
         .post("https://66355114415f4e1a5e243e10.mockapi.io/ToDo/ToDoList", {
           title: newTask,
           description: newDescription,
+          deadline: taskDate,
         })
         .then((response) => {
-          setTasks([...tasks, response.data]);
+          setTasks([...tasks, taskDate, response.data]);
           setNewTask("");
           setNewDescription("");
+          setTaskDate("");
         })
         .catch((error) => console.error("Error adding task:", error));
     }
@@ -94,6 +97,12 @@ const ToDoCard = () => {
           onChange={(e) => setNewDescription(e.target.value)}
           placeholder="Описание"
         />
+        <input className="dateInput"
+            type="date"
+            value={taskDate}
+            onChange={e => setTaskDate(e.target.value)}            
+            placeholder="Дата сдачи"
+          />
         <button className="add-btn" onClick={handleAddTask}>
           +
         </button>
@@ -104,6 +113,7 @@ const ToDoCard = () => {
           <div key={task.id} className="todo-card">
             <div className="todo-card-text">
               <div className="todo-card-title">{task.title}</div>
+              <div className="todo-card-date">{task.deadline}</div>
               {editingTaskId === task.id ? (
                 <div>
                   <input
