@@ -1,8 +1,91 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import "./ToDoCard.scss";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
+const ItemType = {
+  TASK: "task",
+};
+
+const TaskCard = ({
+  task,
+  index,
+  moveTask,
+  handleCompleteTask,
+  handleDeleteTask,
+  handleEditTaskDescription,
+  handleSaveTaskDescription,
+  editingTaskId,
+  editTaskDescription,
+  setEditTaskDescription,
+}) => {
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: ItemType.TASK,
+      item: { index, task },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }),
+    [index, task]
+  );
+
+  const opacity = isDragging ? 0.5 : 1;
+
+  return (
+    <div ref={drag} className="todo-card" style={{ opacity }}>
+      <div className="todo-card-text">
+        <div className="todo-card-title">{task.title}</div>
+        {editingTaskId === task.id ? (
+          <div>
+            <input
+              type="text"
+              value={editTaskDescription}
+              onChange={(e) => setEditTaskDescription(e.target.value)}
+            />
+            <button onClick={() => handleSaveTaskDescription(task.id)}>
+              Save
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div className="todo-card-description">{task.description}</div>
+            <div className="todo-card-dueDate">
+              Срок выполнения: {task.dueDate}
+            </div>
+            <div className="todo-card-tags">
+              {task.tags.map((tag, index) => (
+                <span key={index} className="todo-tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <button
+              className="editBtn"
+              onClick={() =>
+                handleEditTaskDescription(task.id, task.description)
+              }
+            >
+              Изменить
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="todo-card-buttons">
+        <button onClick={() => handleCompleteTask(task.id)}>
+          <CheckIcon />
+        </button>
+        <button onClick={() => handleDeleteTask(task.id)}>
+          <DeleteIcon />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const ToDoCard = () => {
   const [tasks, setTasks] = useState([]);
@@ -25,9 +108,6 @@ const ToDoCard = () => {
           },
         })
         .then((response) => {
-          const tasks = response.data.filter((task) => !task.completed);
-          const completed = response.data.filter((task) => task.completed);
-          // Ensure all tasks have tags field
           const tasksWithTags = response.data.map((task) => ({
             ...task,
             tags: task.tags || [],
@@ -106,17 +186,9 @@ const ToDoCard = () => {
       .delete(`https://6635d4e5415f4e1a5e256e75.mockapi.io/ToDoList/${id}`)
       .then(() => {
         setTasks(tasks.filter((task) => task.id !== id));
-      })
-      .catch((error) => console.error("Error deleting task:", error));
-  };
-
-  const handleDeleteCompletedTask = (id) => {
-    axios
-      .delete(`https://6635d4e5415f4e1a5e256e75.mockapi.io/ToDoList/${id}`)
-      .then(() => {
         setCompletedTasks(completedTasks.filter((task) => task.id !== id));
       })
-      .catch((error) => console.error("Error deleting completed task:", error));
+      .catch((error) => console.error("Error deleting task:", error));
   };
 
   const handleSearchByTag = (tag) => {
@@ -126,6 +198,29 @@ const ToDoCard = () => {
   const filteredTasks = searchTag
     ? tasks.filter((task) => task.tags.includes(searchTag))
     : tasks;
+
+  const moveTask = (dragIndex, hoverIndex, sourceList, setSourceList) => {
+    const draggedTask = sourceList[dragIndex];
+    const updatedTasks = [...sourceList];
+    updatedTasks.splice(dragIndex, 1);
+    updatedTasks.splice(hoverIndex, 0, draggedTask);
+    setSourceList(updatedTasks);
+  };
+
+  const [, drop] = useDrop(
+    () => ({
+      accept: ItemType.TASK,
+      drop: (item, monitor) => {
+        const dragIndex = item.index;
+        const task = item.task;
+        const sourceList = task.completed ? completedTasks : tasks;
+        const setSourceList = task.completed ? setCompletedTasks : setTasks;
+
+        handleDeleteTask(task.id);
+      },
+    }),
+    [tasks, completedTasks]
+  );
 
   return (
     <div className="todo-app">
@@ -157,7 +252,8 @@ const ToDoCard = () => {
           <button className="add-btn" onClick={handleAddTask}>
             +
           </button>
-          <input className="search"
+          <input
+            className="search"
             type="text"
             value={searchTag}
             onChange={(e) => handleSearchByTag(e.target.value)}
@@ -165,86 +261,109 @@ const ToDoCard = () => {
           />
         </div>
       </div>
-      <h4 className="todo-list-title">Текущие задачи</h4>
-      <div className="todo-list">
-        {filteredTasks.map((task) => (
-          <div key={task.id} className="todo-card">
-            <div className="todo-card-text">
-              <div className="todo-card-title">{task.title}</div>
-              {editingTaskId === task.id ? (
-                <div>
-                  <input
-                    type="text"
-                    value={editTaskDescription}
-                    onChange={(e) => setEditTaskDescription(e.target.value)}
-                  />
-                  <button onClick={() => handleSaveTaskDescription(task.id)}>
-                    Save
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <div className="todo-card-description">
-                    {task.description}
-                  </div>
-                  <div className="todo-card-dueDate">
-                    Срок выполнения: {task.dueDate}
-                  </div>
-                  <div className="todo-card-tags">
-                    {task.tags.map((tag, index) => (
-                      <span key={index} className="todo-tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <button
-                    className="editBtn"
-                    onClick={() =>
-                      handleEditTaskDescription(task.id, task.description)
-                    }
-                  >
-                    Изменить
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="todo-card-buttons">
-              <button onClick={() => handleCompleteTask(task.id)}>
-                <CheckIcon />
-              </button>
-              <button onClick={() => handleDeleteTask(task.id)}>
-                <DeleteIcon />
-              </button>
-            </div>
-          </div>
-        ))}
+      <div className="todo-lists">
+        <DroppableColumn
+          title="Текущие задачи"
+          tasks={filteredTasks}
+          setTasks={setTasks}
+          moveTask={moveTask}
+          handleCompleteTask={handleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+          handleEditTaskDescription={handleEditTaskDescription}
+          handleSaveTaskDescription={handleSaveTaskDescription}
+          editingTaskId={editingTaskId}
+          editTaskDescription={editTaskDescription}
+          setEditTaskDescription={setEditTaskDescription}
+          isCompleted={false}
+        />
+        <DroppableColumn
+          title="Выполненные задачи"
+          tasks={completedTasks}
+          setTasks={setCompletedTasks}
+          moveTask={moveTask}
+          handleCompleteTask={handleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+          handleEditTaskDescription={handleEditTaskDescription}
+          handleSaveTaskDescription={handleSaveTaskDescription}
+          editingTaskId={editingTaskId}
+          editTaskDescription={editTaskDescription}
+          setEditTaskDescription={setEditTaskDescription}
+          isCompleted={true}
+        />
+        <div className="trash" ref={drop}>
+          <DeleteForeverIcon style={{ fontSize: 40, fill:'#4482fc' }} />
+        </div>
       </div>
-      <h4 className="todo-list-title">Выполненные задачи</h4>
-      <div className="todo-list">
-        {completedTasks.map((task) => (
-          <div key={task.id} className="todo-card">
-            <div className="todo-card-text">
-              <div className="todo-card-title">{task.title}</div>
-              <div className="todo-card-description">{task.description}</div>
-              <div className="todo-card-dueDate">
-                Срок выполнения: {task.dueDate}
-              </div>
-              <div className="todo-card-tags">
-                {task.tags.map((tag, index) => (
-                  <span key={index} className="todo-tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="todo-card-buttons">
-              <button onClick={() => handleDeleteCompletedTask(task.id)}>
-                <DeleteIcon />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+    </div>
+  );
+};
+
+const DroppableColumn = ({
+  title,
+  tasks,
+  setTasks,
+  moveTask,
+  handleCompleteTask,
+  handleDeleteTask,
+  handleEditTaskDescription,
+  handleSaveTaskDescription,
+  editingTaskId,
+  editTaskDescription,
+  setEditTaskDescription,
+  isCompleted,
+}) => {
+  const [, drop] = useDrop(
+    () => ({
+      accept: ItemType.TASK,
+      drop: (item, monitor) => {
+        const dragIndex = item.index;
+        const draggedTask = item.task;
+
+        if (draggedTask.completed !== isCompleted) {
+          const updatedTask = { ...draggedTask, completed: isCompleted };
+
+          axios
+            .put(
+              `https://6635d4e5415f4e1a5e256e75.mockapi.io/ToDoList/${draggedTask.id}`,
+              updatedTask
+            )
+            .then(() => {
+              setTasks((prevTasks) => [...prevTasks, updatedTask]);
+              if (isCompleted) {
+                setTasks((prevTasks) =>
+                  prevTasks.filter((task) => task.id !== draggedTask.id)
+                );
+              }
+            })
+            .catch((error) => console.error("Error moving task:", error));
+        }
+      },
+    }),
+    [tasks]
+  );
+
+  return (
+    <div className="todo-list" ref={drop}>
+      <h4 className="todo-list-title">{title}</h4>
+      {tasks.length === 0 && title === "Выполненные задачи" ? (
+        <div className="empty-text">перетащите сюда выполненные компоненты</div>
+      ) : (
+        tasks.map((task, index) => (
+          <TaskCard
+            key={task.id}
+            index={index}
+            task={task}
+            moveTask={moveTask}
+            handleCompleteTask={handleCompleteTask}
+            handleDeleteTask={handleDeleteTask}
+            handleEditTaskDescription={handleEditTaskDescription}
+            handleSaveTaskDescription={handleSaveTaskDescription}
+            editingTaskId={editingTaskId}
+            editTaskDescription={editTaskDescription}
+            setEditTaskDescription={setEditTaskDescription}
+          />
+        ))
+      )}
     </div>
   );
 };
